@@ -2,6 +2,8 @@
 #
 #   make                  build all variants into build/
 #   make test             load each bundle in-process and check the loopback
+#   make e2e              play a tone through the installed driver and read it back
+#                         (PLAY=<uid> to play into another device, e.g. a Multi-Output)
 #   sudo make install     install V (default 2ch) and restart coreaudiod
 #   sudo make uninstall   remove V and restart coreaudiod
 
@@ -24,7 +26,7 @@ V ?= 2ch
 
 BUNDLES := $(foreach v,$(VARIANTS),$(BUILD)/AudioRouter$(v).driver)
 
-.PHONY: all test install uninstall clean
+.PHONY: all test e2e install uninstall clean
 all: $(BUNDLES)
 
 define VARIANT_RULES
@@ -50,10 +52,19 @@ $(BUILD)/loopback_test: tests/loopback_test.c
 test: $(BUNDLES) $(BUILD)/loopback_test
 	@for v in $(VARIANTS); do $(BUILD)/loopback_test $(BUILD)/AudioRouter$$v.driver || exit 1; done
 
+PLAY ?= AudioRouter$(V)_UID
+$(BUILD)/e2e: tests/e2e.swift
+	@mkdir -p $(BUILD)
+	swiftc -O -o $@ $<
+
+e2e: $(BUILD)/e2e
+	$(BUILD)/e2e '$(PLAY)' AudioRouter$(V)_UID
+
 install: $(BUILD)/AudioRouter$(V).driver
 	rm -rf $(HAL_DIR)/AudioRouter$(V).driver
 	cp -R $< $(HAL_DIR)/
 	chown -R root:wheel $(HAL_DIR)/AudioRouter$(V).driver
+	xattr -cr $(HAL_DIR)/AudioRouter$(V).driver
 	killall coreaudiod
 
 uninstall:
