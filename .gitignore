@@ -1,0 +1,10 @@
+node_modules/
+app/dist/
+driver/build/
+helper/build/
+.DS_Store
+*.dSYM/
+app/release/
+video/node_modules/
+video/out/
+.env*
