@@ -1,0 +1,43 @@
+# `make dist` packaging: one universal .dmg and .zip in release/.
+# Signed ad-hoc and not notarized, because the project has no Apple Developer ID.
+appId: io.github.jeff909dev.audio-router
+productName: Audio Router
+directories:
+  output: release
+# Vite bundles React and the fonts into dist/, so nothing runs from node_modules.
+files:
+  - dist/**
+  - electron/**
+  - package.json
+  - "!node_modules"
+# main.cjs reads these from process.resourcesPath when packaged.
+extraResources:
+  - from: ../helper/build/arctl
+    to: arctl
+  - from: ../driver/build/AudioRouter2ch.driver
+    to: AudioRouter2ch.driver
+  - from: ../driver/build/AudioRouter16ch.driver
+    to: AudioRouter16ch.driver
+# No auto-update, so no publish provider and no app-update.yml.
+publish: null
+mac:
+  category: public.app-category.music
+  target:
+    - target: dmg
+      arch: universal
+    - target: zip
+      arch: universal
+  artifactName: Audio-Router-${version}-mac.${ext}
+  identity: "-"
+  hardenedRuntime: false
+  notarize: false
+  extendInfo:
+    NSMicrophoneUsageDescription: Audio Router reads the input of its own Audio Router device to draw the level meters. It does not record or send any audio.
+  # arctl and the drivers are universal already, so the x64 and arm64 builds
+  # carry the same Mach-O file and the merge keeps it as is.
+  x64ArchFiles: Contents/Resources/{arctl,AudioRouter*.driver/Contents/MacOS/*}
+  # The merge rewrites every Info.plist, the drivers' too, which breaks their
+  # signatures from make. Signing them here as bundles seals them again.
+  binaries:
+    - Contents/Resources/AudioRouter2ch.driver
+    - Contents/Resources/AudioRouter16ch.driver

@@ -92,7 +92,8 @@ async function changeDriver(id, install) {
     return { ok: false, message: `${v.bundle} is not built. Run \`make\` in the repo root.` };
   }
   const steps = [`rm -rf ${quote(dest)}`];
-  if (install) steps.push(`cp -R ${quote(src)} ${quote(HAL_DIR + '/')}`, `chown -R root:wheel ${quote(dest)}`);
+  // xattr -cr: a driver copied out of a downloaded app would keep com.apple.quarantine.
+  if (install) steps.push(`cp -R ${quote(src)} ${quote(HAL_DIR + '/')}`, `chown -R root:wheel ${quote(dest)}`, `xattr -cr ${quote(dest)}`);
   steps.push('killall coreaudiod');
   try {
     await runAsAdmin(steps.join(' && '));

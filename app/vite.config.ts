@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 // Strict CSP for the packaged page only: the dev server needs an inline
 // script for React Fast Refresh.
-const CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'";
+const CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:";
 const cspInBuild: Plugin = {
   name: 'csp-in-build',
   apply: 'build',

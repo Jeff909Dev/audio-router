@@ -1,0 +1,55 @@
+name: Release
+
+# Pushing a tag like v0.1.0 builds the app and opens a draft release with the
+# .dmg, the .zip and SHA256SUMS.txt. Check the draft, then publish it by hand.
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: macos-26
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Check the tag matches the app and driver versions
+        run: |
+          tag=${GITHUB_REF_NAME#v}
+          app=$(node -p "require('./app/package.json').version")
+          driver=$(sed -n 's/^VERSION *:= *//p' driver/Makefile)
+          echo "tag $tag, app/package.json $app, driver/Makefile $driver"
+          if [ "$tag" != "$app" ] || [ "$tag" != "$driver" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME must equal app/package.json version ($app) and driver/Makefile VERSION ($driver)"
+            exit 1
+          fi
+      - run: npm ci
+        working-directory: app
+      - run: make test
+      - run: make dist
+      - run: scripts/verify-dist.sh
+      - name: Write SHA256SUMS.txt
+        working-directory: app/release
+        run: |
+          shasum -a 256 Audio-Router-*-mac.dmg Audio-Router-*-mac.zip > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - uses: actions/attest@v4
+        with:
+          subject-checksums: app/release/SHA256SUMS.txt
+      - name: Create the draft release
+        working-directory: app/release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" -R "$GITHUB_REPOSITORY" --draft --verify-tag --generate-notes \
+            --title "Audio Router $GITHUB_REF_NAME" \
+            Audio-Router-*-mac.dmg Audio-Router-*-mac.zip SHA256SUMS.txt
