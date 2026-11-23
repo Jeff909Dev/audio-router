@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio Router</title>
+<meta name="description" content="A free virtual audio cable for macOS. Record your screen with your DAW's sound and your voice, and keep listening on your headphones.">
+<meta property="og:title" content="Audio Router">
+<meta property="og:description" content="A free virtual audio cable for macOS.">
+<meta property="og:image" content="https://jeff909dev.github.io/audio-router/media/audio-router-poster.png">
+<style>
+  :root {
+    --rack: #0d0e0f;
+    --faceplate: #141517;
+    --seam: rgba(238, 231, 214, 0.075);
+    --legend: rgba(238, 231, 214, 0.94);
+    --legend-2: rgba(238, 231, 214, 0.66);
+    --amber: #f0a43c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--rack);
+    color: var(--legend);
+    font: 17px/1.5 "IBM Plex Sans Condensed", "Helvetica Neue", system-ui, sans-serif;
+  }
+  main { max-width: 1040px; margin: 0 auto; padding: 48px 16px 64px; }
+  h1 { margin: 0; font-size: 34px; font-weight: 600; letter-spacing: 0.02em; }
+  p { margin: 8px 0 0; color: var(--legend-2); }
+  video {
+    display: block;
+    width: 100%;
+    margin: 28px 0;
+    border: 1px solid var(--seam);
+    border-radius: 6px;
+    background: var(--faceplate);
+  }
+  nav { display: flex; flex-wrap: wrap; gap: 12px; }
+  a {
+    color: var(--legend);
+    border: 1px solid var(--seam);
+    border-radius: 3px;
+    padding: 10px 16px;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  a.primary { color: var(--amber); border-color: rgba(240, 164, 60, 0.45); }
+  a:hover { background: var(--faceplate); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Audio Router</h1>
+  <p>A free virtual audio cable for macOS. Record your screen with your DAW's sound and your voice, and keep listening on your headphones.</p>
+  <video src="media/audio-router.mp4" poster="media/audio-router-poster.png" controls muted playsinline preload="metadata"></video>
+  <nav>
+    <a class="primary" href="https://github.com/Jeff909Dev/audio-router/releases/latest">Download for macOS</a>
+    <a href="https://github.com/Jeff909Dev/audio-router#record-your-screen-with-your-daw-and-your-mic">Setup guide</a>
+    <a href="https://github.com/Jeff909Dev/audio-router">Source code</a>
+  </nav>
+</main>
+</body>
+</html>

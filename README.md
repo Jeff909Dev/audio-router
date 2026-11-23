@@ -13,7 +13,9 @@
 </p>
 
 <p align="center">
-  <a href="docs/media/audio-router.mp4"><img src="docs/media/audio-router-preview.gif" width="800" alt="Animation: a DAW plays into Audio Router, the signal splits to the headphones and to the screen recorder"></a>
+  <a href="https://jeff909dev.github.io/audio-router/"><img src="docs/media/audio-router-preview.gif" width="800" alt="Animation: a DAW plays into Audio Router, the signal splits to the headphones and to the screen recorder"></a>
+  <br>
+  <a href="https://jeff909dev.github.io/audio-router/">Watch the 48-second video</a>
 </p>
 
 Audio Router adds a device named **Audio Router 2ch** to your Mac. Whatever an app plays into it comes back out as a microphone, and any other app can record that microphone. The control app also routes the same sound to your headphones, so you hear exactly what you record.
